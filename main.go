@@ -19,7 +19,6 @@ type Config struct {
 	} `toml:"server"`
 	App struct {
 		DictDir string `toml:"dict_dir"`
-		TmpDir  string `toml:"tmp_dir"`
 		LogPath string `toml:"log_path"`
 	} `toml:"app"`
 }
@@ -59,10 +58,6 @@ func init() {
 		config.App.DictDir = filepath.Join(baseDir, config.App.DictDir)
 	}
 	funcs.TouchDir(config.App.DictDir)
-	if !filepath.IsAbs(config.App.TmpDir) {
-		config.App.TmpDir = filepath.Join(baseDir, config.App.TmpDir)
-	}
-	funcs.TouchDir(config.App.TmpDir)
 	if !filepath.IsAbs(config.App.LogPath) {
 		config.App.LogPath = filepath.Join(baseDir, config.App.LogPath)
 	}

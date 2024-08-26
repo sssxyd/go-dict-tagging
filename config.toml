@@ -3,5 +3,4 @@ port = 80
 
 [app]
 dict_dir = "data"
-tmp_dir = "tmp"
 log_path = "logs/app.log"
