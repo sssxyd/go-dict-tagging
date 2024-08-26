@@ -25,9 +25,10 @@ type TrieNode struct {
 }
 
 type DictInfo struct {
-	Dict  string `json:"dict"`
-	Words int    `json:"words"`
-	LMT   string `json:"lmt"`
+	Dict        string `json:"dict"`
+	Words       int    `json:"words"`
+	LoadTime    string `json:"loadTime"`
+	LastModTime string `json:"lastModTime"`
 }
 
 func listDicts(dirPath string) []string {
@@ -134,9 +135,10 @@ func LoadData() (*TrieNode, []DictInfo) {
 		}
 		dictLen := len(wordEnties)
 		dictInfos = append(dictInfos, DictInfo{
-			Dict:  dict,
-			Words: dictLen,
-			LMT:   getLastModificationTime(dict_json_path),
+			Dict:        dict,
+			Words:       dictLen,
+			LoadTime:    time.Now().Local().Format("2006-01-02 15:03:04"),
+			LastModTime: getLastModificationTime(dict_json_path),
 		})
 		total += dictLen
 		for _, entry := range wordEnties {

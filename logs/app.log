@@ -21,3 +21,5 @@
 2024/08/26 19:14:55.483037 dict.go:58: error when open dict file: E:\LTS\go-dict-tagging\data\category.json\namecn.json, open E:\LTS\go-dict-tagging\data\category.json\namecn.json: The system cannot find the path specified.
 2024/08/26 19:15:31.101915 dict.go:58: error when open dict file: E:\LTS\go-dict-tagging\data\category.json\namecn.json, open E:\LTS\go-dict-tagging\data\category.json\namecn.json: The system cannot find the path specified.
 2024/08/26 19:16:11.945449 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 180 ms
+2024/08/26 19:22:31.438901 dict.go:149: load [category,namecn] dicts from data, total 26216 word entries, cost 181 ms
+2024/08/26 19:23:24.877597 dict.go:149: load [category,namecn] dicts from data, total 26216 word entries, cost 180 ms
