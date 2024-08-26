@@ -2,6 +2,7 @@ package funcs
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -34,26 +35,27 @@ func GetExecutionPath() string {
 	}
 }
 
-func InitializeLogFile(name string) {
-	// 指定日志文件的路径
-	logFilDir := filepath.Join(GetExecutionPath(), "logs")
+func InitializeLogFile(logFilePath string, stdOut bool) {
+	// 设置日志前缀包含长文件名和行号
+	log.SetFlags(log.Lshortfile | log.Ldate | log.Ltime | log.Lmicroseconds)
 
+	// 指定日志文件的路径
+	logFilDir := filepath.Dir(logFilePath)
 	// 确保目录存在
 	if err := os.MkdirAll(logFilDir, 0755); err != nil {
 		log.Fatalf("Failed to create directory: %v", err)
 	}
-
-	logFilePath := filepath.Join(logFilDir, name+".log")
-
 	// 打开或创建日志文件
 	logFile, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
 
-	// 设置 MultiWriter，同时输出到文件和 stdout
-	// mw := io.MultiWriter(os.Stdout, logFile)
-	// log.SetOutput(mw)
+	if stdOut {
+		//设置 MultiWriter，同时输出到文件和 stdout
+		mw := io.MultiWriter(os.Stdout, logFile)
+		log.SetOutput(mw)
+	}
 	log.SetOutput(logFile)
 }
 

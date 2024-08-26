@@ -24,6 +24,12 @@ type TrieNode struct {
 	Entrys   []WordEntry
 }
 
+type DictInfo struct {
+	Dict  string `json:"dict"`
+	Words int    `json:"words"`
+	LMT   string `json:"lmt"`
+}
+
 func listDicts(dirPath string) []string {
 	// 读取目录
 	dirs, err := os.ReadDir(dirPath)
@@ -97,30 +103,47 @@ func insertIntoTrie(root *TrieNode, entry WordEntry) {
 	}
 }
 
-func LoadData() *TrieNode {
+func getLastModificationTime(filePath string) string {
+	fileInfo, err := os.Stat(filePath)
+	if err != nil {
+		return ""
+	}
+	modTime := fileInfo.ModTime()
+	return modTime.Local().Format("2006-01-02 15:03:04")
+}
+
+func LoadData() (*TrieNode, []DictInfo) {
 	startTime := time.Now().UnixMilli()
 	dict_path := filepath.Join(funcs.GetExecutionPath(), "data")
 	dict_names := listDicts(dict_path)
 	fmt.Printf("load dict %v from path %s\n", dict_names, dict_path)
 	if len(dict_names) == 0 {
-		return &TrieNode{}
+		return &TrieNode{}, []DictInfo{}
 	}
 	root := TrieNode{
 		Children: make(map[rune]*TrieNode),
 	}
+	var dictInfos []DictInfo
 	total := 0
 	for _, dict := range dict_names {
 		fmt.Printf("read dict %s\n", dict)
-		wordEnties := readDictFile(dict, filepath.Join(dict_path, dict+".json"))
+		dict_json_path := filepath.Join(dict_path, dict+".json")
+		wordEnties := readDictFile(dict, dict_json_path)
 		if wordEnties == nil {
 			continue
 		}
-		total += len(wordEnties)
+		dictLen := len(wordEnties)
+		dictInfos = append(dictInfos, DictInfo{
+			Dict:  dict,
+			Words: dictLen,
+			LMT:   getLastModificationTime(dict_json_path),
+		})
+		total += dictLen
 		for _, entry := range wordEnties {
 			insertIntoTrie(&root, entry)
 		}
 	}
 	endTime := time.Now().UnixMilli()
-	fmt.Printf("load [%s] dicts from data, total %d word entries, cost %d ms\n", strings.Join(dict_names, ","), total, (endTime - startTime))
-	return &root
+	log.Printf("load [%s] dicts from data, total %d word entries, cost %d ms\n", strings.Join(dict_names, ","), total, (endTime - startTime))
+	return &root, dictInfos
 }

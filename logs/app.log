@@ -1,0 +1,23 @@
+2024/08/26 13:58:29.833618 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 256 ms
+2024/08/26 15:39:05.545352 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 153 ms
+2024/08/26 15:39:41.978816 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 190 ms
+2024/08/26 15:39:53.504473 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 152 ms
+2024/08/26 15:40:37.879370 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 150 ms
+2024/08/26 15:41:46.699674 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 181 ms
+2024/08/26 15:47:14.042677 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 161 ms
+2024/08/26 15:47:35.374166 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 150 ms
+2024/08/26 15:49:09.289843 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 153 ms
+2024/08/26 15:49:20.913764 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 147 ms
+2024/08/26 15:50:31.012968 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 153 ms
+2024/08/26 15:50:41.578480 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 151 ms
+2024/08/26 15:50:47.688698 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 151 ms
+2024/08/26 15:54:35.459104 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 155 ms
+2024/08/26 17:58:30.211060 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 149 ms
+2024/08/26 18:02:06.013542 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 154 ms
+2024/08/26 18:54:47.360412 dict.go:124: load [category,namecn] dicts from data, total 26216 word entries, cost 152 ms
+2024/08/26 19:07:05.254924 dict.go:135: load [category,namecn] dicts from data, total 26216 word entries, cost 156 ms
+2024/08/26 19:07:25.782372 dict.go:135: load [category,namecn] dicts from data, total 26216 word entries, cost 152 ms
+2024/08/26 19:10:50.053831 dict.go:137: load [category,namecn] dicts from data, total 26216 word entries, cost 167 ms
+2024/08/26 19:14:55.483037 dict.go:58: error when open dict file: E:\LTS\go-dict-tagging\data\category.json\namecn.json, open E:\LTS\go-dict-tagging\data\category.json\namecn.json: The system cannot find the path specified.
+2024/08/26 19:15:31.101915 dict.go:58: error when open dict file: E:\LTS\go-dict-tagging\data\category.json\namecn.json, open E:\LTS\go-dict-tagging\data\category.json\namecn.json: The system cannot find the path specified.
+2024/08/26 19:16:11.945449 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 180 ms

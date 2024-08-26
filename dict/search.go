@@ -1,12 +1,9 @@
 package dict
 
 type QueryEntry struct {
-	Start uint16                 `json:"start"`
-	End   uint16                 `json:"end"`
-	Dict  string                 `json:"dict"`
-	Index []string               `json:"index"`
-	Word  string                 `json:"word"`
-	Data  map[string]interface{} `json:"data"`
+	Start uint16
+	End   uint16
+	Entry WordEntry
 }
 
 func Search(root *TrieNode, keyword string, start uint16) []QueryEntry {
@@ -31,10 +28,7 @@ func Search(root *TrieNode, keyword string, start uint16) []QueryEntry {
 					queryResults = append(queryResults, QueryEntry{
 						Start: start,
 						End:   start + index,
-						Dict:  entry.Dict,
-						Index: entry.Index,
-						Word:  entry.Word,
-						Data:  entry.Data,
+						Entry: entry,
 					})
 				}
 			}

@@ -2,88 +2,84 @@ package main
 
 import (
 	"dict_tagging/dict"
-	"dict_tagging/statement"
+	"dict_tagging/funcs"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 	"sync"
-	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/pelletier/go-toml/v2"
 )
 
-// 并发搜索多个关键词并合并结果
-func concurrentSearch(root *dict.TrieNode, searchWords []statement.SearchWord) []dict.QueryEntry {
-	var wg sync.WaitGroup
-	resultChan := make(chan []dict.QueryEntry, len(searchWords))
-	// 对每个关键词启动一个 goroutine
-	for _, kw := range searchWords {
-		wg.Add(1)
-		go func(kw statement.SearchWord) {
-			defer wg.Done()
-			// 调用 Search 函数
-			for _, idx := range kw.Start {
-				results := dict.Search(root, kw.Word, idx)
-				resultChan <- results
-			}
-		}(kw)
-	}
-
-	// 等待所有的 goroutine 完成
-	go func() {
-		wg.Wait()
-		close(resultChan)
-	}()
-
-	// 合并所有结果
-	var mergedResults []dict.QueryEntry
-	for res := range resultChan {
-		mergedResults = append(mergedResults, res...)
-	}
-
-	return mergedResults
+type Config struct {
+	Server struct {
+		Port int `toml:"port"`
+	} `toml:"server"`
+	App struct {
+		DictDir string `toml:"dict_dir"`
+		TmpDir  string `toml:"tmp_dir"`
+		LogPath string `toml:"log_path"`
+	} `toml:"app"`
 }
 
-func search(root *dict.TrieNode, clause string) []dict.QueryEntry {
-	startTime := time.Now().UnixMicro()
-	searchWords := statement.Split(clause)
-	entries := concurrentSearch(root, searchWords)
-	endTime := time.Now().UnixMicro()
-	fmt.Printf("search cost %d ns\n", (endTime - startTime))
-	return entries
+type ApiResult struct {
+	Code   int         `json:"code"`
+	Msg    string      `json:"msg"`
+	Result interface{} `json:"result"`
+	Micros int         `json:"micros"`
 }
 
 var (
 	// 全局变量
-	root *dict.TrieNode
-	// 读写锁保护全局变量
-	mutex sync.RWMutex
+	root          *dict.TrieNode
+	infos         []dict.DictInfo
+	config        Config
+	dictWriteLock sync.Mutex
 )
 
 func init() {
-	root = dict.LoadData()
-}
+	log.SetFlags(log.LstdFlags)
 
-// 获取配置的副本，供协程安全使用
-func getRootNode() *dict.TrieNode {
-	mutex.RLock()
-	defer mutex.RUnlock()
-	return root
-}
+	// 读取配置文件
+	baseDir := funcs.GetExecutionPath()
+	file, err := os.Open(filepath.Join(baseDir, "config.toml"))
+	if err != nil {
+		log.Fatalf("Failed to open config file: %v", err)
+	}
+	defer file.Close()
+	decoder := toml.NewDecoder(file)
+	if err := decoder.Decode(&config); err != nil {
+		log.Fatalf("Failed to decode config file: %v", err)
+	}
 
-// 异步更新根节点
-func asyncUpdateRootNode() {
-	// 在独立的协程中加载新数据
-	go func() {
-		newRoot := dict.LoadData() // 加载新数据，耗时操作
+	// 初始化目录及日志
+	if !filepath.IsAbs(config.App.DictDir) {
+		config.App.DictDir = filepath.Join(baseDir, config.App.DictDir)
+	}
+	funcs.TouchDir(config.App.DictDir)
+	if !filepath.IsAbs(config.App.TmpDir) {
+		config.App.TmpDir = filepath.Join(baseDir, config.App.TmpDir)
+	}
+	funcs.TouchDir(config.App.TmpDir)
+	if !filepath.IsAbs(config.App.LogPath) {
+		config.App.LogPath = filepath.Join(baseDir, config.App.LogPath)
+	}
+	funcs.InitializeLogFile(config.App.LogPath, true)
 
-		// 加载完成后，用写锁替换全局的 root
-		mutex.Lock()
-		defer mutex.Unlock()
-		root = newRoot
-	}()
+	// 加载字典
+	root, infos = dict.LoadData()
 }
 
 func main() {
-	clause := "我感冒了，医生建议吃对乙酰氨基酚，并且医生嘱咐说：不要吃布洛芬就这样子，另外要调节血糖、注意清咽润喉；也可以弄点奥利司他吃吃"
-	entries := search(root, clause)
-	for _, entry := range entries {
-		fmt.Printf("search %s get entry %+v\n", entry.Dict, entry)
-	}
+	// 创建Gin引擎
+	engine := gin.Default()
+
+	handleTag(engine)
+	handlePut(engine)
+	handleReload(engine)
+	handleInfo(engine)
+
+	engine.Run(fmt.Sprintf(":%d", config.Server.Port))
 }
