@@ -40,3 +40,13 @@
 2024/08/27 12:07:23.325032 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 183 ms
 2024/08/27 12:07:52.319672 dict.go:119: load dict [category namecn] from path E:\LTS\go-dict-tagging\data
 2024/08/27 12:07:52.543766 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 224 ms
+2024/08/27 13:27:49.390168 dict.go:119: load dict [category namecn] from path E:\LTS\go-dict-tagging\data
+2024/08/27 13:27:49.696827 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 306 ms
+2024/08/27 13:40:14.161225 dict.go:119: load dict [category namecn] from path E:\LTS\go-dict-tagging\data
+2024/08/27 13:40:14.397570 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 237 ms
+2024/08/27 13:42:18.618115 dict.go:119: load dict [category namecn] from path E:\LTS\go-dict-tagging\data
+2024/08/27 13:42:18.841935 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 224 ms
+2024/08/27 13:43:20.953236 dict.go:119: load dict [category namecn] from path E:\LTS\go-dict-tagging\data
+2024/08/27 13:43:21.209873 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 256 ms
+2024/08/27 13:51:31.726873 dict.go:119: load dict [category namecn] from path E:\LTS\go-dict-tagging\data
+2024/08/27 13:51:31.997026 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 271 ms
