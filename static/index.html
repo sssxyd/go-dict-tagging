@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>字典标注接口</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h3, h3, h4, h5 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: Consolas, "Courier New", monospace;
+        }
+        #codeBlock {
+            display: none;
+            margin-top: 10px;
+        }
+        #toggleButton {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #toggleButton:hover {
+            background-color: #0056b3;
+        }
+        .round-button {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background-color: #007bff; 
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .round-button:hover {
+            background-color: #0056b3;
+            opacity: 0.5;
+        }   
+    </style>
+</head>
+<body>
+<h1 style="text-align: center;">字典标注接口文档</h1>
+<h2>1. 语句标注接口 <button class="round-button" onclick="toggleCodeBlock(this, 'api1')">-</button></h1>
+<div id="api1">
+    <h3>1.1. 接口描述 <button class="round-button" onclick="toggleCodeBlock(this, 'desc1')">-</button></h3>
+    <div id="desc1">
+        <ul>
+            <li>请求地址：<strong>/tag</strong></li>
+            <li>请求方式: <strong>POST/GET</strong></li>
+            <li>返回数据类型：<strong>application/json</strong></li>
+            <li>用途：根据字典，对传入的语句进行标注，返回语句中的关键词对应的字典名称及词条</li>
+        </ul>
+    </div>
+
+    <h3>1.2. 请求参数 <button class="round-button" onclick="toggleCodeBlock(this, 'params1')">+</button></h3>
+    <div id="params1" style="display: none;">
+        <h3>1.2.1. Header 参数(POST时必须)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>参数名</th>
+                    <th>必选</th>
+                    <th>类型/参数值</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Content-Type</td>
+                    <td>是</td>
+                    <td>application/json</td>
+                    <td>POST JSON</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>1.2.2. Body 参数(POST时必须)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>参数名</th>
+                    <th>必选</th>
+                    <th>类型</th>
+                    <th>限制条件</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>statement</td>
+                    <td>是</td>
+                    <td>string</td>
+                    <td>1 &lt; 字节长度 &lt; 65535</td>
+                    <td>标注语句</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>1.3. 请求示例 <button class="round-button" onclick="toggleCodeBlock(this, 'req1')">+</button></h3>
+    <div id="req1" style="display: none;">
+    <pre><code>
+        POST /tag HTTP/1.1
+        {
+            "statement": "我大抵是病了，要调节血糖，吃些盐酸二甲双胍，或许再吃些奥利司他减减肥"
+        }
+        //或者
+        GET /tag?statement=我大抵是病了，要调节血糖，吃些盐酸二甲双胍，或许再吃些奥利司他减减肥
+    </code></pre>
+    </div>
+
+    <h3>1.4. 返回示例 <button class="round-button" onclick="toggleCodeBlock(this, 'resp1')">+</button></h3>
+    
+    <div id="resp1" style="display: none;">
+    <pre><code>{
+    "code": 1,  // 0：成功，其他：失败
+    "msg": "",  // 错误信息
+    "result": {
+        "奥利司他": {
+            "keyword": "奥利司他",  // 关键词
+            "positions": [
+                {
+                    "start": 26,    // 关键词在语句中的起始位置
+                    "end": 29       // 关键词在语句中的结束位置
+                }
+            ],
+            "dictwords": {          // 关键词对应的字典名称及其中的词条列表
+                "namecn": [         
+                    {
+                        "Dict": "namecn",           // 字典名称
+                        "word": "奥利司他胶囊",      //  词条
+                        "index": [                  //  词条对应的索引词列表
+                            "奥利司他",
+                            "奥利司他胶囊"
+                        ],
+                        "data": {                   //  词条数据
+                            "categoryId": 19344,
+                            "categoryType": "西药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 0
+                        }
+                    },
+                    {
+                        "Dict": "namecn",
+                        "word": "奥利司他",
+                        "index": [
+                            "奥利司他"
+                        ],
+                        "data": {
+                            "categoryId": 32832,
+                            "categoryType": "原料药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 2
+                        }
+                    },
+                    {
+                        "Dict": "namecn",
+                        "word": "奥利司他片",
+                        "index": [
+                            "奥利司他",
+                            "奥利司他片"
+                        ],
+                        "data": {
+                            "categoryId": 32833,
+                            "categoryType": "西药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 0
+                        }
+                    }
+                ]
+            }
+        },
+        "盐酸": {
+            "keyword": "盐酸",
+            "positions": [
+                {
+                    "start": 14,
+                    "end": 15
+                }
+            ],
+            "dictwords": {
+                "namecn": [
+                    {
+                        "Dict": "namecn",
+                        "word": "盐酸",
+                        "index": [
+                            "盐酸"
+                        ],
+                        "data": {
+                            "categoryId": 23093,
+                            "categoryType": "原料药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 2
+                        }
+                    }
+                ]
+            }
+        },
+        "盐酸二甲双胍": {
+            "keyword": "盐酸二甲双胍",
+            "positions": [
+                {
+                    "start": 14,
+                    "end": 19
+                }
+            ],
+            "dictwords": {
+                "namecn": [
+                    {
+                        "Dict": "namecn",
+                        "word": "盐酸二甲双胍片",
+                        "index": [
+                            "盐酸二甲双胍",
+                            "盐酸二甲双胍片"
+                        ],
+                        "data": {
+                            "categoryId": 975,
+                            "categoryType": "西药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 2
+                        }
+                    },
+                    {
+                        "Dict": "namecn",
+                        "word": "盐酸二甲双胍肠溶片",
+                        "index": [
+                            "盐酸二甲双胍",
+                            "盐酸二甲双胍肠溶片"
+                        ],
+                        "data": {
+                            "categoryId": 10019,
+                            "categoryType": "西药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 2
+                        }
+                    },
+                    {
+                        "Dict": "namecn",
+                        "word": "盐酸二甲双胍缓释片",
+                        "index": [
+                            "盐酸二甲双胍",
+                            "盐酸二甲双胍缓释片"
+                        ],
+                        "data": {
+                            "categoryId": 10508,
+                            "categoryType": "西药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 1
+                        }
+                    },
+                    {
+                        "Dict": "namecn",
+                        "word": "盐酸二甲双胍胶囊",
+                        "index": [
+                            "盐酸二甲双胍",
+                            "盐酸二甲双胍胶囊"
+                        ],
+                        "data": {
+                            "categoryId": 12263,
+                            "categoryType": "西药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 2
+                        }
+                    },
+                    {
+                        "Dict": "namecn",
+                        "word": "盐酸二甲双胍肠溶胶囊",
+                        "index": [
+                            "盐酸二甲双胍",
+                            "盐酸二甲双胍肠溶胶囊"
+                        ],
+                        "data": {
+                            "categoryId": 18175,
+                            "categoryType": "西药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 2
+                        }
+                    },
+                    {
+                        "Dict": "namecn",
+                        "word": "盐酸二甲双胍缓释胶囊",
+                        "index": [
+                            "盐酸二甲双胍",
+                            "盐酸二甲双胍缓释胶囊"
+                        ],
+                        "data": {
+                            "categoryId": 18178,
+                            "categoryType": "西药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 2
+                        }
+                    },
+                    {
+                        "Dict": "namecn",
+                        "word": "盐酸二甲双胍",
+                        "index": [
+                            "盐酸二甲双胍"
+                        ],
+                        "data": {
+                            "categoryId": 22501,
+                            "categoryType": "原料药",
+                            "isControl": false,
+                            "isHighRisk": false,
+                            "medicineType": 2
+                        }
+                    }
+                ]
+            }
+        },
+        "调节血糖": {
+            "keyword": "调节血糖",
+            "positions": [
+                {
+                    "start": 8,
+                    "end": 11
+                }
+            ],
+            "dictwords": {
+                "category": [
+                    {
+                        "Dict": "category",
+                        "word": "调节血糖",
+                        "index": [
+                            "调节血糖"
+                        ],
+                        "data": {
+                            "categoryId": 32125,
+                            "categoryType": "保健品"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "micros": 189       // 接口耗时，单位微秒
+    }</code></pre>
+    </div>
+</div>
+
+    <h3>7. 备注</h3>
+
+    <script>
+        function toggleCodeBlock(btn, blockId) {
+            var codeBlock = document.getElementById(blockId);
+            if (codeBlock.style.display === "none") {
+                codeBlock.style.display = "block";
+                btn.innerText = "-";
+            } else {
+                codeBlock.style.display = "none";
+                btn.innerText = "+";
+            }
+        }
+    </script>    
+
+</body>
+</html>

@@ -1,8 +1,14 @@
 # Use the official Golang image as the base image
-FROM golang:1.22.6
+FROM golang:1.22.6-alpine3.20
 
 # Set the working directory inside the container
 WORKDIR /app
+
+# Set the GOPROXY environment variable
+ENV GOPROXY=https://goproxy.cn
+
+# Ensure that modules are used by default
+ENV GO111MODULE on
 
 # Copy the Go module files
 COPY go.mod go.sum ./

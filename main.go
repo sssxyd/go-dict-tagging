@@ -18,8 +18,10 @@ type Config struct {
 		Port int `toml:"port"`
 	} `toml:"server"`
 	App struct {
-		DictDir string `toml:"dict_dir"`
-		LogPath string `toml:"log_path"`
+		RootDir   string
+		DictDir   string `toml:"dict_dir"`
+		LogPath   string `toml:"log_path"`
+		StaticDir string `toml:"static_dir"`
 	} `toml:"app"`
 }
 
@@ -53,11 +55,19 @@ func init() {
 		log.Fatalf("Failed to decode config file: %v", err)
 	}
 
+	config.App.RootDir = baseDir
+
 	// 初始化目录及日志
 	if !filepath.IsAbs(config.App.DictDir) {
 		config.App.DictDir = filepath.Join(baseDir, config.App.DictDir)
 	}
 	funcs.TouchDir(config.App.DictDir)
+
+	if !filepath.IsAbs(config.App.StaticDir) {
+		config.App.StaticDir = filepath.Join(baseDir, config.App.StaticDir)
+	}
+	funcs.TouchDir(config.App.StaticDir)
+
 	if !filepath.IsAbs(config.App.LogPath) {
 		config.App.LogPath = filepath.Join(baseDir, config.App.LogPath)
 	}
@@ -70,6 +80,17 @@ func init() {
 func main() {
 	// 创建Gin引擎
 	engine := gin.Default()
+
+	engine.Static("/static", config.App.StaticDir)
+	engine.GET("/", func(ctx *gin.Context) {
+		ctx.File(filepath.Join(config.App.StaticDir, "index.html"))
+	})
+	engine.GET("/index.html", func(ctx *gin.Context) {
+		ctx.File(filepath.Join(config.App.StaticDir, "index.html"))
+	})
+	engine.GET("/favicon.ico", func(ctx *gin.Context) {
+		ctx.File(filepath.Join(config.App.StaticDir, "favicon.ico"))
+	})
 
 	handleTag(engine)
 	handlePut(engine)
