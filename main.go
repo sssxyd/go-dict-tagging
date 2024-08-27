@@ -11,7 +11,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/pelletier/go-toml/v2"
-	"golang.org/x/sys/windows"
 )
 
 type Config struct {
@@ -45,13 +44,13 @@ func init() {
 	log.SetFlags(log.LstdFlags)
 
 	// 设置Windows控制台为UTF-8编码
-	if os.Getenv("OS") == "Windows_NT" {
-		handle := windows.Handle(os.Stdout.Fd())
-		var mode uint32
-		windows.GetConsoleMode(handle, &mode)
-		mode |= windows.ENABLE_VIRTUAL_TERMINAL_PROCESSING
-		windows.SetConsoleMode(handle, mode)
-	}
+	// if os.Getenv("OS") == "Windows_NT" {
+	// 	handle := windows.Handle(os.Stdout.Fd())
+	// 	var mode uint32
+	// 	windows.GetConsoleMode(handle, &mode)
+	// 	mode |= windows.ENABLE_VIRTUAL_TERMINAL_PROCESSING
+	// 	windows.SetConsoleMode(handle, mode)
+	// }
 
 	// 读取配置文件
 	baseDir := funcs.GetExecutionPath()

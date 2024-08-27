@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <title>字典标注接口</title>
+    <title>字典标注服务接口文档</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,8 +75,8 @@
 </head>
 <body>
 <h1 style="text-align: center;">字典标注接口文档</h1>
-<h2>1. 语句标注接口 <button class="round-button" onclick="toggleCodeBlock(this, 'api1')">-</button></h1>
-<div id="api1">
+<h2>1. 语句标注接口 <button class="round-button" onclick="toggleCodeBlock(this, 'api1')">+</button></h1>
+<div id="api1" style="display: none;">
     <h3>1.1. 接口描述 <button class="round-button" onclick="toggleCodeBlock(this, 'desc1')">-</button></h3>
     <div id="desc1">
         <ul>
@@ -147,7 +147,7 @@
     <h3>1.4. 返回示例 <button class="round-button" onclick="toggleCodeBlock(this, 'resp1')">+</button></h3>
     <div id="resp1" style="display: none;">
     <pre><code>{
-    "code": 1,  // 0：成功，其他：失败
+    "code": 1,  // 1：成功，其他：失败, 全部接口均返回此格式
     "msg": "",  // 错误信息
     "result": {
         "奥利司他": {
@@ -381,8 +381,8 @@
     </div>
 </div>
 
-<h2>2. 更新字典接口 <button class="round-button" onclick="toggleCodeBlock(this, 'api2')">-</button></h1>
-<div id="api2">
+<h2>2. 更新字典接口 <button class="round-button" onclick="toggleCodeBlock(this, 'api2')">+</button></h1>
+<div id="api2" style="display: none;">
     <h3>2.1. 接口描述 <button class="round-button" onclick="toggleCodeBlock(this, 'desc2')">-</button></h3>
     <div id="desc2">
         <ul>
@@ -457,8 +457,8 @@
 </div>
 
 
-<h2>3. 重构字典索引树 <button class="round-button" onclick="toggleCodeBlock(this, 'api3')">-</button></h1>
-<div id="api3">
+<h2>3. 重构字典索引树 <button class="round-button" onclick="toggleCodeBlock(this, 'api3')">+</button></h1>
+<div id="api3" style="display: none;">
     <h3>3.1. 接口描述 <button class="round-button" onclick="toggleCodeBlock(this, 'desc3')">-</button></h3>
     <div id="desc3">
         <ul>
@@ -470,8 +470,8 @@
     </div>
 </div>
 
-<h2>4. 索引树字典文件详情 <button class="round-button" onclick="toggleCodeBlock(this, 'api4')">-</button></h1>
-<div id="api4">
+<h2>4. 索引树字典文件详情 <button class="round-button" onclick="toggleCodeBlock(this, 'api4')">+</button></h1>
+<div id="api4" style="display: none;">
     <h3>4.1. 接口描述 <button class="round-button" onclick="toggleCodeBlock(this, 'desc4')">-</button></h3>
     <div id="desc4">
         <ul>
