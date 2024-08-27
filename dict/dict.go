@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"dict_tagging/funcs"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -117,7 +116,7 @@ func LoadData() (*TrieNode, []DictInfo) {
 	startTime := time.Now().UnixMilli()
 	dict_path := filepath.Join(funcs.GetExecutionPath(), "data")
 	dict_names := listDicts(dict_path)
-	fmt.Printf("load dict %v from path %s\n", dict_names, dict_path)
+	log.Printf("load dict %v from path %s\n", dict_names, dict_path)
 	if len(dict_names) == 0 {
 		return &TrieNode{}, []DictInfo{}
 	}
@@ -127,7 +126,6 @@ func LoadData() (*TrieNode, []DictInfo) {
 	var dictInfos []DictInfo
 	total := 0
 	for _, dict := range dict_names {
-		fmt.Printf("read dict %s\n", dict)
 		dict_json_path := filepath.Join(dict_path, dict+".json")
 		wordEnties := readDictFile(dict, dict_json_path)
 		if wordEnties == nil {

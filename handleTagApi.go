@@ -135,6 +135,13 @@ func handleSearch(ctx *gin.Context, startMicros int64, clause string) {
 	}
 }
 
+// handleTag handles the "/tag" route for both GET and POST requests.
+// For GET requests, it retrieves the "statement" query parameter from the request context and calls the handleSearch function with the statement.
+// For POST requests, it retrieves the request parameters based on the "Content-Type" header and calls the handleSearch function with the statement.
+// If the "Content-Type" is "application/json", it expects JSON data and binds it to the RequestParams struct.
+// If the "Content-Type" is "application/x-www-form-urlencoded" or "multipart/form-data", it expects form data and binds it to the RequestParams struct.
+// If the "Content-Type" is not supported, it returns a JSON response with status code 415 and an error message.
+// The handleSearch function is called with the startMicros timestamp and the statement from the request parameters.
 func handleTag(engine *gin.Engine) {
 	engine.GET("/tag", func(ctx *gin.Context) {
 		startMicros := time.Now().UnixMicro()

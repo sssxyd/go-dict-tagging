@@ -23,3 +23,10 @@
 2024/08/26 19:16:11.945449 dict.go:147: load [category,namecn] dicts from data, total 26216 word entries, cost 180 ms
 2024/08/26 19:22:31.438901 dict.go:149: load [category,namecn] dicts from data, total 26216 word entries, cost 181 ms
 2024/08/26 19:23:24.877597 dict.go:149: load [category,namecn] dicts from data, total 26216 word entries, cost 180 ms
+2024/08/27 09:13:36.232690 dict.go:149: load [category,namecn] dicts from data, total 26216 word entries, cost 209 ms
+2024/08/27 09:35:37.769515 handlePutApi.go:44: fileName: category.json, ext: .json, baseName: category.json
+2024/08/27 09:40:50.575487 handlePutApi.go:44: fileName: category.json, ext: .json, baseName: category.json
+2024/08/27 09:41:08.320343 dict.go:149: load [category] dicts from data, total 376 word entries, cost 3 ms
+2024/08/27 09:41:41.061425 handlePutApi.go:44: fileName: namecn.json, ext: .json, baseName: namecn.json
+2024/08/27 09:41:55.950330 dict.go:149: load [category,namecn] dicts from data, total 26216 word entries, cost 168 ms
+2024/08/27 09:43:45.061592 dict.go:149: load [category,namecn] dicts from data, total 26216 word entries, cost 188 ms

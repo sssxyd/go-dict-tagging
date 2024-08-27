@@ -12,6 +12,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// handlePut handles the HTTP POST request for uploading a file and saving it as a dictionary.
+// It expects a form file named "file" to be uploaded.
+// If the file upload fails or the file extension is not ".json", it returns an error response.
+// If a dictionary with the same name already exists, it is deleted before saving the new file.
+// The uploaded file is saved to the specified dictionary directory.
+// The response contains the status code, message, and the result indicating the success or failure of the upload operation.
 func handlePut(engine *gin.Engine) {
 	engine.POST("/put", func(ctx *gin.Context) {
 		dictWriteLock.Lock()
@@ -30,11 +36,12 @@ func handlePut(engine *gin.Engine) {
 			return
 		}
 		// 提取文件名
+
 		baseName := filepath.Base(file.Filename)
 		// 分离扩展名
 		ext := filepath.Ext(baseName)
 		dict := baseName[:len(baseName)-len(ext)]
-		ext = strings.ToLower(ext)
+		ext = strings.ToLower(ext[1:])
 		if ext == "" || ext != "json" || dict == "" {
 			ctx.JSON(200, ApiResult{
 				Code:   100,

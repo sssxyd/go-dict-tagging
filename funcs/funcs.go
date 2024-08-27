@@ -55,8 +55,9 @@ func InitializeLogFile(logFilePath string, stdOut bool) {
 		//设置 MultiWriter，同时输出到文件和 stdout
 		mw := io.MultiWriter(os.Stdout, logFile)
 		log.SetOutput(mw)
+	} else {
+		log.SetOutput(logFile)
 	}
-	log.SetOutput(logFile)
 }
 
 func IsPathExist(path string) bool {
