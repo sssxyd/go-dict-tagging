@@ -1,0 +1,18 @@
+[Unit]
+Description=Tag Statement by Dict
+After=network.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+ExecStart=/path/to/dict_tagging_dir/dict_tagging
+Restart=always
+RestartSec=5s
+WorkingDirectory=/path/to/dict_tagging_dir/dict_tagging/
+Environment=""
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

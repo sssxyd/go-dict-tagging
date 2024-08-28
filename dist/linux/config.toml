@@ -1,0 +1,7 @@
+[server]
+port = 8080
+
+[app]
+dict_dir = "data"
+static_dir = "static"
+log_path = "logs/app.log"

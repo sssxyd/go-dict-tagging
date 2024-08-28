@@ -144,14 +144,14 @@ http://127.0.0.1:8080/tag?statement=我有糖尿病，在吃格华止，可以�
 2. Extract the archive.
 3. (Optional)Edit your own dictionary entries in the data directory.
 4. Double-click to run dict_tagging.exe.
-5. Access in the browser: http://localhost:8080/tag?statement={your statement}
+5. Access in the browser: http://localhost:8080/tag?statement=your_statement
 
 ### Linux
 1. Download the linux program archive from the release page.
 2. Extract the archive.
 3. (Optional)Edit your own dictionary entries in the data directory.
 4. ./dict_tagging
-5. Access in the browser: http://your-server-ip:8080/tag?statement={your statement}
+5. Access in the browser: http://your-server-ip:8080/tag?statement=your_statement
 
 ### Docker
 ```sh
