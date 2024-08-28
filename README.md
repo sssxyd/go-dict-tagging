@@ -140,14 +140,14 @@ http://127.0.0.1:8080/tag?statement=我有糖尿病，在吃格华止，可以�
 
 ## Usage
 ### Windows
-1. Download the Windows program archive from the release page.
+1. Download the Windows program archive from the [release page](https://github.com/sssxyd/go-dict-tagging/releases/).
 2. Extract the archive.
 3. (Optional)Edit your own dictionary entries in the data directory.
 4. Double-click to run dict_tagging.exe.
 5. Access in the browser: http://localhost:8080/tag?statement=your_statement
 
 ### Linux
-1. Download the linux program archive from the release page.
+1. Download the linux program archive from the [release page](https://github.com/sssxyd/go-dict-tagging/releases/).
 2. Extract the archive.
 3. (Optional)Edit your own dictionary entries in the data directory.
 4. ./dict_tagging
