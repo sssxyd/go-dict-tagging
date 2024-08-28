@@ -156,7 +156,7 @@ http://127.0.0.1:8080/tag?statement=我有糖尿病，在吃格华止，可以�
 ### Docker
 ```sh
 cd /path/to/dict_tagging_dir
-docker build -t dict_tagging:1.0.1 .
-docker run -d -p 8080:8080 dict_tagging:1.0.1
+docker build -t dict_tagging:1.0.2 .
+docker run -d -p 8080:8080 dict_tagging:1.0.2
 ```
 
