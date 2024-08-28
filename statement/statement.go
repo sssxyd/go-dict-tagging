@@ -1,7 +1,5 @@
 package statement
 
-import "dict_tagging/funcs"
-
 type index_word struct {
 	start uint16
 	word  string
@@ -14,25 +12,28 @@ type SearchWord struct {
 
 func Split(statement string) []SearchWord {
 	var words []index_word
-	var lastWord string
-	var startIdx uint16
-	runes := []rune(statement)
-	for i, c := range runes {
-		if funcs.RuneIsStopChar(c) {
-			if lastWord != "" {
-				words = append(words, index_word{start: startIdx, word: lastWord})
-			}
-			// 更新startIdx为下一个词的起始位置
-			startIdx = uint16(i + 1)
-			lastWord = ""
-			continue
-		}
-		lastWord += string(c)
-	}
-	// 如果最后一个词存在，添加到words中
-	if lastWord != "" {
-		words = append(words, index_word{start: startIdx, word: lastWord})
-	}
+	// 不再做切词，完全匹配，包括空格和标点符号
+	// var lastWord string
+	// var startIdx uint16
+	// runes := []rune(statement)
+	// for i, c := range runes {
+	// 	if funcs.RuneIsStopChar(c) {
+	// 		if lastWord != "" {
+	// 			words = append(words, index_word{start: startIdx, word: lastWord})
+	// 		}
+	// 		// 更新startIdx为下一个词的起始位置
+	// 		startIdx = uint16(i + 1)
+	// 		lastWord = ""
+	// 		continue
+	// 	}
+	// 	lastWord += string(c)
+	// }
+	// // 如果最后一个词存在，添加到words中
+	// if lastWord != "" {
+	// 	words = append(words, index_word{start: startIdx, word: lastWord})
+	// }
+
+	words = append(words, index_word{start: 0, word: statement})
 
 	var allWords []index_word
 	for _, w := range words {
