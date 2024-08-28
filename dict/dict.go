@@ -12,7 +12,7 @@ import (
 )
 
 type WordEntry struct {
-	Dict  string
+	Dict  string                 `json:"dict"`
 	Word  string                 `json:"word"`
 	Index []string               `json:"index"`
 	Data  map[string]interface{} `json:"data"`
@@ -109,7 +109,7 @@ func getLastModificationTime(filePath string) string {
 		return ""
 	}
 	modTime := fileInfo.ModTime()
-	return modTime.Local().Format("2006-01-02 15:03:04")
+	return modTime.Format("2006-01-02 15:03:04")
 }
 
 func LoadData() (*TrieNode, []DictInfo) {
@@ -135,7 +135,7 @@ func LoadData() (*TrieNode, []DictInfo) {
 		dictInfos = append(dictInfos, DictInfo{
 			Dict:        dict,
 			Words:       dictLen,
-			LoadTime:    time.Now().Local().Format("2006-01-02 15:03:04"),
+			LoadTime:    time.Now().Format("2006-01-02 15:03:04"),
 			LastModTime: getLastModificationTime(dict_json_path),
 		})
 		total += dictLen
