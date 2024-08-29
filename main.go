@@ -4,6 +4,7 @@ import (
 	"dict_tagging/dict"
 	"dict_tagging/funcs"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -18,10 +19,12 @@ type Config struct {
 		Port int `toml:"port"`
 	} `toml:"server"`
 	App struct {
-		RootDir   string
-		DictDir   string `toml:"dict_dir"`
-		LogPath   string `toml:"log_path"`
-		StaticDir string `toml:"static_dir"`
+		RootDir       string
+		DictDir       string `toml:"dict_dir"`
+		StaticDir     string `toml:"static_dir"`
+		AccessLogPath string `toml:"access_log_path"`
+		ErrorLogPath  string `toml:"error_log_path"`
+		AppLogPath    string `toml:"app_log_path"`
 	} `toml:"app"`
 }
 
@@ -41,8 +44,6 @@ var (
 )
 
 func init() {
-	log.SetFlags(log.LstdFlags)
-
 	// 设置Windows控制台为UTF-8编码
 	// if os.Getenv("OS") == "Windows_NT" {
 	// 	handle := windows.Handle(os.Stdout.Fd())
@@ -56,31 +57,57 @@ func init() {
 	baseDir := funcs.GetExecutionPath()
 	file, err := os.Open(filepath.Join(baseDir, "config.toml"))
 	if err != nil {
-		log.Fatalf("Failed to open config file: %v", err)
+		fmt.Printf("Failed to open config file: %v", err)
 	}
 	defer file.Close()
 	decoder := toml.NewDecoder(file)
 	if err := decoder.Decode(&config); err != nil {
-		log.Fatalf("Failed to decode config file: %v", err)
+		fmt.Printf("Failed to decode config file: %v", err)
 	}
 
 	config.App.RootDir = baseDir
 
-	// 初始化目录及日志
+	// dict dir
 	if !filepath.IsAbs(config.App.DictDir) {
 		config.App.DictDir = filepath.Join(baseDir, config.App.DictDir)
 	}
 	funcs.TouchDir(config.App.DictDir)
 
+	// static dir
 	if !filepath.IsAbs(config.App.StaticDir) {
 		config.App.StaticDir = filepath.Join(baseDir, config.App.StaticDir)
 	}
 	funcs.TouchDir(config.App.StaticDir)
 
-	if !filepath.IsAbs(config.App.LogPath) {
-		config.App.LogPath = filepath.Join(baseDir, config.App.LogPath)
+	// access log path
+	if !filepath.IsAbs(config.App.AccessLogPath) {
+		config.App.AccessLogPath = filepath.Join(baseDir, config.App.AccessLogPath)
 	}
-	funcs.InitializeLogFile(config.App.LogPath, true)
+	funcs.TouchDir(filepath.Dir(config.App.AccessLogPath))
+	accessLogFile, err := os.OpenFile(config.App.AccessLogPath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer file.Close()
+	gin.DefaultWriter = io.MultiWriter(accessLogFile, os.Stdout)
+
+	// error log path
+	if !filepath.IsAbs(config.App.ErrorLogPath) {
+		config.App.ErrorLogPath = filepath.Join(baseDir, config.App.ErrorLogPath)
+	}
+	funcs.TouchDir(filepath.Dir(config.App.ErrorLogPath))
+	errorLogFile, err := os.OpenFile(config.App.ErrorLogPath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer file.Close()
+	gin.DefaultErrorWriter = io.MultiWriter(errorLogFile, os.Stderr)
+
+	// app log path
+	if !filepath.IsAbs(config.App.AppLogPath) {
+		config.App.AppLogPath = filepath.Join(baseDir, config.App.AppLogPath)
+	}
+	funcs.InitializeLogFile(config.App.AppLogPath, true)
 
 	// 加载字典
 	root, infos = dict.LoadData()

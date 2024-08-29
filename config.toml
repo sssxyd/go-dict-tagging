@@ -4,4 +4,6 @@ port = 8080
 [app]
 dict_dir = "data"
 static_dir = "static"
-log_path = "logs/app.log"
+access_log_path = "logs/access.log"
+error_log_path = "logs/error.log"
+app_log_path = "logs/app.log"
