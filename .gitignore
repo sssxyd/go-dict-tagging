@@ -28,3 +28,4 @@ go.work.sum
 *.log
 /logs
 /dist
+/dict_tagging
