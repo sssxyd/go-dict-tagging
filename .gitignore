@@ -29,3 +29,4 @@ go.work.sum
 /logs
 /dist
 /dict_tagging
+/linux
