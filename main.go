@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pelletier/go-toml/v2"
@@ -37,6 +38,7 @@ type ApiResult struct {
 
 var (
 	// 全局变量
+	serverStarted time.Time
 	root          *dict.TrieNode
 	infos         []dict.DictInfo
 	config        Config
@@ -44,6 +46,7 @@ var (
 )
 
 func init() {
+	serverStarted = time.Now()
 	// 设置Windows控制台为UTF-8编码
 	// if os.Getenv("OS") == "Windows_NT" {
 	// 	handle := windows.Handle(os.Stdout.Fd())
@@ -136,7 +139,7 @@ func main() {
 	handleReload(engine)
 	handleInfo(engine)
 
-	log.Printf("Server started at port %d\n", config.Server.Port)
+	log.Printf("Server started at port %d, cost %d ms\n", config.Server.Port, time.Since(serverStarted).Milliseconds())
 
 	engine.Run(fmt.Sprintf(":%d", config.Server.Port))
 }
