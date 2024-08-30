@@ -136,5 +136,7 @@ func main() {
 	handleReload(engine)
 	handleInfo(engine)
 
+	log.Printf("Server started at port %d\n", config.Server.Port)
+
 	engine.Run(fmt.Sprintf(":%d", config.Server.Port))
 }

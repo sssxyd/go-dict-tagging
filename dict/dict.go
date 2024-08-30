@@ -109,7 +109,7 @@ func getLastModificationTime(filePath string) string {
 		return ""
 	}
 	modTime := fileInfo.ModTime()
-	return modTime.Format("2006-01-02 15:03:04")
+	return modTime.Format("2006-01-02 15:04:05")
 }
 
 func LoadData() (*TrieNode, []DictInfo) {
@@ -135,7 +135,7 @@ func LoadData() (*TrieNode, []DictInfo) {
 		dictInfos = append(dictInfos, DictInfo{
 			Dict:        dict,
 			Words:       dictLen,
-			LoadTime:    time.Now().Format("2006-01-02 15:03:04"),
+			LoadTime:    time.Now().Format("2006-01-02 15:04:05"),
 			LastModTime: getLastModificationTime(dict_json_path),
 		})
 		total += dictLen
