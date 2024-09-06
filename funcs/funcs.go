@@ -35,7 +35,7 @@ func GetExecutionPath() string {
 	}
 }
 
-func InitializeLogFile(logFilePath string, stdOut bool) {
+func InitializeLogFile(logFilePath string, stdOut bool) *os.File {
 	// 设置日志前缀包含长文件名和行号
 	log.SetFlags(log.Lshortfile | log.Ldate | log.Ltime | log.Lmicroseconds)
 
@@ -58,6 +58,7 @@ func InitializeLogFile(logFilePath string, stdOut bool) {
 	} else {
 		log.SetOutput(logFile)
 	}
+	return logFile
 }
 
 func IsPathExist(path string) bool {

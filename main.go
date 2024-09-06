@@ -7,8 +7,10 @@ import (
 	"io"
 	"log"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -43,7 +45,30 @@ var (
 	infos         []dict.DictInfo
 	config        Config
 	dictWriteLock sync.Mutex
+	accessLogFile *os.File
+	errorLogFile  *os.File
+	appLogFile    *os.File
 )
+
+func handleShutdown() {
+	// 创建一个 channel 来接收操作系统信号
+	signalChan := make(chan os.Signal, 1)
+
+	// 捕获 SIGINT (Ctrl+C) 和 SIGTERM (systemctl stop) 信号
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+
+	// 等待信号
+	sig := <-signalChan
+	log.Printf("Received signal: %s. Shutting down...", sig)
+
+	// 关闭日志文件
+	accessLogFile.Close()
+	errorLogFile.Close()
+	appLogFile.Close()
+
+	// 退出程序
+	os.Exit(0)
+}
 
 func init() {
 	serverStarted = time.Now()
@@ -87,30 +112,31 @@ func init() {
 		config.App.AccessLogPath = filepath.Join(baseDir, config.App.AccessLogPath)
 	}
 	funcs.TouchDir(filepath.Dir(config.App.AccessLogPath))
-	accessLogFile, err := os.OpenFile(config.App.AccessLogPath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	acc, err := os.OpenFile(config.App.AccessLogPath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
-	defer file.Close()
-	gin.DefaultWriter = io.MultiWriter(accessLogFile, os.Stdout)
+	gin.DefaultWriter = io.MultiWriter(acc, os.Stdout)
+	accessLogFile = acc
 
 	// error log path
 	if !filepath.IsAbs(config.App.ErrorLogPath) {
 		config.App.ErrorLogPath = filepath.Join(baseDir, config.App.ErrorLogPath)
 	}
 	funcs.TouchDir(filepath.Dir(config.App.ErrorLogPath))
-	errorLogFile, err := os.OpenFile(config.App.ErrorLogPath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	ef, err := os.OpenFile(config.App.ErrorLogPath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
-	defer file.Close()
-	gin.DefaultErrorWriter = io.MultiWriter(errorLogFile, os.Stderr)
+	gin.DefaultErrorWriter = io.MultiWriter(ef, os.Stderr)
+	errorLogFile = ef
 
 	// app log path
 	if !filepath.IsAbs(config.App.AppLogPath) {
 		config.App.AppLogPath = filepath.Join(baseDir, config.App.AppLogPath)
 	}
-	funcs.InitializeLogFile(config.App.AppLogPath, true)
+	af := funcs.InitializeLogFile(config.App.AppLogPath, true)
+	appLogFile = af
 
 	// 加载字典
 	root, infos = dict.LoadData()
@@ -119,6 +145,8 @@ func init() {
 func main() {
 	// 设置 Gin 运行模式为 release
 	gin.SetMode(gin.ReleaseMode)
+
+	go handleShutdown()
 
 	// 创建Gin引擎
 	engine := gin.Default()
