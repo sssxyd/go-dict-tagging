@@ -157,7 +157,8 @@ func handleTag(engine *gin.Engine) {
 		contentType := ctx.GetHeader("Content-Type")
 
 		// 根据Content-Type判定
-		if contentType == "application/json" {
+		switch contentType {
+		case "application/json":
 			// 处理JSON数据
 			if err := ctx.ShouldBindJSON(&params); err != nil {
 				ctx.JSON(http.StatusBadRequest, ApiResult{
@@ -167,7 +168,7 @@ func handleTag(engine *gin.Engine) {
 				})
 				return
 			}
-		} else if contentType == "application/x-www-form-urlencoded" || contentType == "multipart/form-data" {
+		case "application/x-www-form-urlencoded", "multipart/form-data":
 			// 处理表单数据
 			if err := ctx.ShouldBind(&params); err != nil {
 				ctx.JSON(http.StatusBadRequest, ApiResult{
@@ -177,7 +178,7 @@ func handleTag(engine *gin.Engine) {
 				})
 				return
 			}
-		} else {
+		default:
 			ctx.JSON(http.StatusUnsupportedMediaType, ApiResult{
 				Code:   415,
 				Msg:    fmt.Sprintf("contentType: %s not supported", contentType),
